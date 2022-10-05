@@ -1,11 +1,9 @@
-import Meals from './Components/Meals';
-import './styles/meals.css'
+import Meals from './Components/Meal/Meals';
+import './styles/GeneralStyle.css'
 
 function App () {
 
-  return <div>
-    <Meals/>
-  </div>
+  return <Meals/>
 }
 
 export default App;

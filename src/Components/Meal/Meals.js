@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import MealItem from "./MealItem";
-import Cart from './Cart'
+import Cart from '../Cart/Cart'
+import mealStyle from '../../styles/meals.module.css'
 
 function Meals () {
   const [cart, setCart] = useState([])
@@ -26,18 +27,22 @@ function Meals () {
     }
   ]
 
-  return <div>
-    <h2>Meals</h2>
+  return <>
     <Cart amount={cart}/>
 
-    <div className="meal">
-    {meals.map((meal, i) => <MealItem
-      key={i}
-      agregarCarrito={setCart}
-      {...meal}
-    />)}
+    <div className={`${mealStyle.container}`}>
+      <ul className={`${mealStyle.meal}`}>
+      {
+        meals.map( meal => <MealItem
+            key={meal.id}
+            agregarCarrito={setCart}
+            {...meal}
+          />
+        )
+      }
+      </ul>
     </div>
-  </div>
+  </>
 }
 
 export default Meals;
