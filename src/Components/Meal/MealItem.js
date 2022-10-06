@@ -19,25 +19,28 @@ function MealItem (props) {
     setCantidad(target.value);
   }
 
-  return <li className={`${mealStyle.card} ${cartStyle['seccion-buy']}`}>
-    <div className={`${mealStyle['float-end']} `} style={{width: '15%'}}> 
-      <div className={`${cartStyle['amount-seccion']}`}>
-        <span>Cantidad: </span>
-        <input  defaultValue="1" onChange={changeCantidad} />
-      </div>
-      <button className={`${cartStyle['button-add']}`} 
-        style={{}}
-        onClick={agregarACarrito} 
-        value={props.id}>
-          + Agregar carrito
-      </button>
-    </div>
-    <div className="description-meal">
+  return <li className={`${mealStyle['flex-wrap']} ${cartStyle['seccion-buy']}`} >
+    <div className={`${mealStyle['col-half']}`}>
       <h3>{props.platillo}</h3>
       <label style={{fontSize: '12pt', fontWeight: 'normal', fontStyle: 'italic'}}>{props.description}</label>
-      <div className={`${cartStyle.price}`}>${props.precio}</div>
+      <div className={`${cartStyle.price}`} style={{margin: '0.5rem 0'}}>${props.precio}</div>
     </div>
-    <hr/>
+    <div className={`${mealStyle['col-half']} ${mealStyle['row-reverse']} ${mealStyle['item-center']}`} > 
+      <div>
+        <div >
+          <span>Cantidad: </span>
+          <input className="col-2" defaultValue="1" onChange={changeCantidad} />
+        </div>
+        <div>
+          <button className={`${cartStyle['button-add']}`} 
+            style={{}}
+            onClick={agregarACarrito} 
+            value={props.id}>
+            + Agregar carrito
+          </button>
+        </div>
+      </div>
+    </div>
   </li>
 }
 

@@ -5,7 +5,9 @@
   border-radius: 10px;
   justify-content: center;
   padding-left: 1rem;
+  max-width: 50rem;
 }
+
 
 .card {
   list-style: none;
@@ -13,9 +15,52 @@
 }
 
 .container {
-  margin: 2rem 2rem
+  margin: 1% 21%
+}
+
+.flex-wrap {
+  display: flex;
+  flex-wrap: flex-wrap;
+}
+
+.flex-dir-end {
+  flex-direction: column;
+  align-content: end;
+}
+
+.row-reverse {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.item-center {
+  align-items:center;
+}
+
+.col-half {
+  width: 50%;
+}
+
+@media(max-width: 500px) {
+  .flex-wrap {
+    display: block
+  }
+
+  .col-half {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .container {
+    margin: 0 1%
+  }
+  
+  .meal {
+    margin-top: 5rem;
+  }
 }
 
 .float-end {
   float:right;
 }
+

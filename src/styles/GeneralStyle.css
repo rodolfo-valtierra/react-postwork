@@ -6,3 +6,7 @@ input {
 * {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.col-2 {
+  width: 2rem;
+}
