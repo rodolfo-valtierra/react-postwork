@@ -3,6 +3,12 @@
   border-radius: 20px;
 }
 
+.round:hover {
+  transform: scale(1.07);
+  transition: ease-in 200ms;
+  cursor: default;
+}
+
 .counter-cart {
   padding: 4px;
   padding-left: 8px;
@@ -16,7 +22,7 @@
   align-items: center;
   width: 15%;
   height: 60%;
-  margin-top: 0.5rem;
+  margin-top: 0.7rem;
   background-color: #4d1601;
 }
 

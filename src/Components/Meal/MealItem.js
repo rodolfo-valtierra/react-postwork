@@ -3,27 +3,33 @@ import mealStyle from '../../styles/meals.module.css'
 import cartStyle from '../../styles/CartStyle.module.css'
 
 function MealItem (props) {
-  const [useCantidad, setCantidad] = useState(0)
+  const [useCantidad, setCantidad] = useState(1)
+  const {
+    description,
+    precio,
+    platillo
+  } = props.meal;
 
   const agregarACarrito = () => {
-    props.agregarCarrito(count =>  [
-      ...count, 
+    props.add(
       {
-        id: props.id, 
-        cantidad: useCantidad
+        ...props.meal,
+        cantidad: parseInt(useCantidad)
       }
-    ]);
+    );
   }
 
-  const changeCantidad = ({target}) => {
-    setCantidad(target.value);
-  }
+  const changeCantidad = ({target}) => setCantidad(target.value);
 
   return <li className={`${mealStyle['flex-wrap']} ${cartStyle['seccion-buy']}`} >
     <div className={`${mealStyle['col-half']}`}>
-      <h3>{props.platillo}</h3>
-      <label style={{fontSize: '12pt', fontWeight: 'normal', fontStyle: 'italic'}}>{props.description}</label>
-      <div className={`${cartStyle.price}`} style={{margin: '0.5rem 0'}}>${props.precio}</div>
+      <h3>{platillo}</h3>
+      <label style={{fontSize: '12pt', fontWeight: 'normal', fontStyle: 'italic'}}>
+        {description}
+      </label>
+      <div className={`${cartStyle.price}`} style={{margin: '0.5rem 0'}}>
+        ${precio}
+      </div>
     </div>
     <div className={`${mealStyle['col-half']} ${mealStyle['row-reverse']} ${mealStyle['item-center']}`} > 
       <div>
@@ -34,8 +40,8 @@ function MealItem (props) {
         <div>
           <button className={`${cartStyle['button-add']}`} 
             style={{}}
-            onClick={agregarACarrito} 
-            value={props.id}>
+            onClick={agregarACarrito}
+          >
             + Agregar carrito
           </button>
         </div>

@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import MealItem from "./MealItem";
-import Cart from '../Cart/Cart'
+import Cart from '../Cart'
 import mealStyle from '../../styles/meals.module.css'
+import Modal from '../UI/modal'
 
 function Meals () {
   const [cart, setCart] = useState([])
+  const [isModalOpen, setModalOpen] = useState(false)
   
   const meals = [
     {
@@ -27,21 +29,40 @@ function Meals () {
     }
   ]
 
+  const openModal = () => setModalOpen(!isModalOpen)
+
+  const addCart = (meal) => {
+    const index = cart.findIndex( el => el.id==meal.id);
+    console.log(index)
+    if(index!=-1) 
+      return setCart(cart => {
+        cart[index].cantidad += meal.cantidad;
+        return [...cart]; 
+      });
+    
+    setCart(el => [...el, meal])
+  } 
+
   return <>
-    <Cart amount={cart}/>
+    <Cart amount={cart} open={openModal}/>
 
     <div className={`${mealStyle.container}`}>
       <ul className={`${mealStyle.meal}`}>
       {
         meals.map( meal => <MealItem
             key={meal.id}
-            agregarCarrito={setCart}
-            {...meal}
+            add={addCart}
+            meal={meal}
           />
         )
       }
       </ul>
     </div>
+    {
+      isModalOpen?
+        <Modal onConfirm={openModal} cart={cart}/>
+        : null
+    }
   </>
 }
 

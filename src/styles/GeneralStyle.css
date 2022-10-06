@@ -10,3 +10,7 @@ input {
 .col-2 {
   width: 2rem;
 }
+
+.col-half {
+  width: 50%;
+}
