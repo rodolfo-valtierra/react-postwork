@@ -39,7 +39,6 @@ function MealItem (props) {
         </div>
         <div>
           <button className={`${cartStyle['button-add']}`} 
-            style={{}}
             onClick={agregarACarrito}
           >
             + Agregar carrito

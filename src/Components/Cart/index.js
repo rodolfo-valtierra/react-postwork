@@ -11,7 +11,7 @@ function Cart (props) {
         Carrito: 
         <div className={`${cartStyle.round} ${cartStyle['counter-cart']}`} 
           align="center">
-            {count()}
+            {count}
         </div>
     </div>
     <h2 className={`${navStyle.title}`} style={{width: '20%'}} align="center">React Meals</h2>

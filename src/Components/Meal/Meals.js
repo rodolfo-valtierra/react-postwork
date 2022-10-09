@@ -1,72 +1,84 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useReducer } from 'react'
 import MealItem from "./MealItem";
 import Cart from '../Cart'
 import mealStyle from '../../styles/meals.module.css'
 import Modal from '../UI/modal'
 import CartContext from '../../Context/CartContext'
 
-const ReducerCart = (oldState,  ACTION) => {
+const meals = [
+  {
+    id: 1,
+    platillo: 'Jamba Juice',
+    description: 'Fruit & Veggie, Orange Carrot Karma Smoothie',
+    precio: 10
+  },
+  {
+    id: 2,
+    platillo: "Florida's Natural",
+    description: '100% Orange Juice with Calcium & Vitamin D',
+    precio: 50
+  },
+  {
+    id: 3,
+    platillo: 'Spaguety',
+    description: 'pasta italiana adornada con finas hierbas',
+    precio: 120
+  }
+]
+
+function ReducerCart (oldState,  ACTION) {
   switch (ACTION.type) {
     case 'ADD':{
-      const index = oldState.findIndex( el => el.id==ACTION.meal.id);
+      const index = oldState.cart.findIndex( el => el.id==ACTION.meal.id);
+      console.log(ACTION)
 
       if(index!=-1) {
-        oldState[index].cantidad += meal.cantidad
-        return [...oldState]; 
+        oldState.cart[index].cantidad += ACTION.meal.cantidad
+        return {...oldState}; 
       }
       
-      oldState.push(ACTION.meal);
+      oldState.cart.push(ACTION.meal);
 
-      return oldState;
-    }
+      return {...oldState};
+    };
+    case 'CHANGE_AMOUNT': {
+      const index = oldState.cart.findIndex( el => el.id==ACTION.meal.id);
+      oldState.cart[index].cantidad += ACTION.add.cantidad;
+
+
+      return {...oldState}
+    };
     case 'DROP': {
-      oldState = oldState.filter(el => el.id=ACTION.dropId);
-      return [...oldState];
-    }
-    default: return [...oldState];
+      oldState = oldState.cart.filter(el => el.id=ACTION.dropId);
+      return {...oldState};
+    };
+    default: return oldState;
   }
 }
 
 function Meals () {
-  const [cart, setCart] = useState([])
   const [isModalOpen, setModalOpen] = useState(false)
-  const [cartState, cartDispatcher] = useReducer(ReducerCart);
-
-  const meals = [
-    {
-      id: 1,
-      platillo: 'Jamba Juice',
-      description: 'Fruit & Veggie, Orange Carrot Karma Smoothie',
-      precio: 10
-    },
-    {
-      id: 2,
-      platillo: "Florida's Natural",
-      description: '100% Orange Juice with Calcium & Vitamin D',
-      precio: 50
-    },
-    {
-      id: 3,
-      platillo: 'Spaguety',
-      description: 'pasta italiana adornada con finas hierbas',
-      precio: 120
-    }
-  ]
+  const [cartState, cartDispatcher] = useReducer(ReducerCart, {cartIsOpen: false, cart: []});
 
   const openModal = () => setModalOpen(!isModalOpen)
 
-  const totalProducts = () => cartState.reduce((acc, el) => acc+el.precio, 0);
-  const countProducts = () => cartState.reduce((acc, el) => acc+el.cantidad, 0);
+  const totalProducts = () => cartState.cart.reduce((acc, el) => acc+el.precio, 0);
+  const countProducts = () => cartState.cart.reduce((acc, el) => acc+el.cantidad, 0);
 
-  return <CartContext.Provider value={{productos: cartState, count: countProducts, total: totalProducts}}>
-    <Cart amount={cart} open={openModal}/>
+  const addNewMeal = (newMeal) => {
+    console.log(newMeal)
+    cartDispatcher({type: 'ADD', meal: newMeal})
+  }
+
+  return <CartContext.Provider value={{productos: cartState.cart, count: countProducts(), total: totalProducts()}}>
+    <Cart open={openModal}/>
 
     <div className={`${mealStyle.container}`}>
       <ul className={`${mealStyle.meal}`}>
       {
         meals.map( meal => <MealItem
             key={meal.id}
-            add={(newMeal) => cartDispatcher({action: 'ADD',  meal: newMeal})}
+            add={addNewMeal}
             meal={meal}
           />
         )
@@ -75,7 +87,7 @@ function Meals () {
     </div>
     {
       isModalOpen?
-        <Modal onConfirm={openModal} add={cartDispatcher}/>
+        <Modal onConfirm={openModal} add={()=>{}}/>
         : null
     }
   </CartContext.Provider>
