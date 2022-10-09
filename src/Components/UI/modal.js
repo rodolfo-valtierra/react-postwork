@@ -1,15 +1,18 @@
 import ReactDOM from 'react-dom'
-import { useState, useEffect } from 'react'
+import { useContext } from 'react'
 import styles from "../../styles/Modal.module.css";
 import cartStyle from '../../styles/CartStyle.module.css'
 import mealStyle from '../../styles/meals.module.css'
+import CartContext from '../../Context/CartContext'
 
 const ModalOverlay = (props) => <div className={styles.modal} onBlur={props.onBlur}>
   <div className={styles.header}>
     <h2>Cart List</h2>
   </div>
   <div className={styles.content}>
-    { props.cart.map( el => <div className={`${cartStyle['seccion-buy']} ${mealStyle['flex-wrap']}`}>
+    { 
+      props.productos.map( (el, i) => <div key={i}
+        className={`${cartStyle['seccion-buy']} ${mealStyle['flex-wrap']}`}>
         <div className="col-half">
             {el.platillo}
             <div className={`${cartStyle['price']}`}> 
@@ -28,12 +31,12 @@ const ModalOverlay = (props) => <div className={styles.modal} onBlur={props.onBl
     }
     <div className={` ${cartStyle['seccion-buy']} ${mealStyle['flex-wrap']}`} style={{borderBottom: 'none'}}>
       <label className="col-half">Total</label>
-      <label className={`col-half ${mealStyle['row-reverse']}`}>${props.total}</label>
+      <label className={`col-half ${mealStyle['row-reverse']}`}>$ {props.total}</label>
     </div>
   </div>
   <div className={`${styles.actions}`}>
-    <button onClick={props.onConfirm}>Cerrar</button>
-    <button onClick={props.onConfirm}>Ordenar</button>
+    <button onClick={props.onClose}>Cerrar</button>
+    <button onClick={props.onClose}>Ordenar</button>
   </div>
 </div>;
 
@@ -42,17 +45,11 @@ ModalOverlay.defaultProps = {
 };
 
 function Modal(props) {
-  const [useTotal, setTotal] = useState(0);
-
-  useEffect(() => {
-    setTotal(calcularTotal())
-  }, [props.cart])
-
-  const calcularTotal = () => props.cart.reduce((acc, el) => acc+(el.precio*el.cantidad),0);
+  const useCartContext = useContext(CartContext)
 
   return ReactDOM.createPortal(<>
       <div className={styles.backdrop} onClick={props.onConfirm}></div>,
-      <ModalOverlay {...props} total={useTotal}/> 
+      <ModalOverlay {...useCartContext} onClose={props.onConfirm} add={props.add}/> 
     </>,
     document.getElementById("modal-root")
   );

@@ -1,13 +1,37 @@
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import MealItem from "./MealItem";
 import Cart from '../Cart'
 import mealStyle from '../../styles/meals.module.css'
 import Modal from '../UI/modal'
+import CartContext from '../../Context/CartContext'
+
+const ReducerCart = (oldState,  ACTION) => {
+  switch (ACTION.type) {
+    case 'ADD':{
+      const index = oldState.findIndex( el => el.id==ACTION.meal.id);
+
+      if(index!=-1) {
+        oldState[index].cantidad += meal.cantidad
+        return [...oldState]; 
+      }
+      
+      oldState.push(ACTION.meal);
+
+      return oldState;
+    }
+    case 'DROP': {
+      oldState = oldState.filter(el => el.id=ACTION.dropId);
+      return [...oldState];
+    }
+    default: return [...oldState];
+  }
+}
 
 function Meals () {
   const [cart, setCart] = useState([])
   const [isModalOpen, setModalOpen] = useState(false)
-  
+  const [cartState, cartDispatcher] = useReducer(ReducerCart);
+
   const meals = [
     {
       id: 1,
@@ -31,19 +55,10 @@ function Meals () {
 
   const openModal = () => setModalOpen(!isModalOpen)
 
-  const addCart = (meal) => {
-    const index = cart.findIndex( el => el.id==meal.id);
-    console.log(index)
-    if(index!=-1) 
-      return setCart(cart => {
-        cart[index].cantidad += meal.cantidad;
-        return [...cart]; 
-      });
-    
-    setCart(el => [...el, meal])
-  } 
+  const totalProducts = () => cartState.reduce((acc, el) => acc+el.precio, 0);
+  const countProducts = () => cartState.reduce((acc, el) => acc+el.cantidad, 0);
 
-  return <>
+  return <CartContext.Provider value={{productos: cartState, count: countProducts, total: totalProducts}}>
     <Cart amount={cart} open={openModal}/>
 
     <div className={`${mealStyle.container}`}>
@@ -51,7 +66,7 @@ function Meals () {
       {
         meals.map( meal => <MealItem
             key={meal.id}
-            add={addCart}
+            add={(newMeal) => cartDispatcher({action: 'ADD',  meal: newMeal})}
             meal={meal}
           />
         )
@@ -60,10 +75,10 @@ function Meals () {
     </div>
     {
       isModalOpen?
-        <Modal onConfirm={openModal} cart={cart}/>
+        <Modal onConfirm={openModal} add={cartDispatcher}/>
         : null
     }
-  </>
+  </CartContext.Provider>
 }
 
 export default Meals;
