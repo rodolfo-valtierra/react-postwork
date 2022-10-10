@@ -9,7 +9,9 @@ function ModalOverlay (props) {
 
   const changeAmount = (meal) => ({target}) => {
     meal.cantidad += (target.value=='-'?-1: 1);
-    props.add({type: 'CHANGE', meal });
+
+    if (meal.cantidad>=0)
+      props.add({type: 'CHANGE', meal });
   }
 
   return <div className={styles.modal} onBlur={props.onBlur}>

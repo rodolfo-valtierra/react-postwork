@@ -49,4 +49,8 @@ function MealItem (props) {
   </li>
 }
 
+MealItem.defaultProps = {
+  meal: {}
+}
+
 export default MealItem;
