@@ -5,13 +5,14 @@ import cartStyle from '../../styles/CartStyle.module.css'
 import mealStyle from '../../styles/meals.module.css'
 import CartContext from '../../Context/CartContext'
 
-const ModalOverlay = (props) =>  {
+function ModalOverlay (props) {
 
-  const changeAmount = () => {
-    props.add({type: 'ADD', })
+  const changeAmount = (meal) => ({target}) => {
+    meal.cantidad += (target.value=='-'?-1: 1);
+    props.add({type: 'CHANGE', meal });
   }
 
-  <div className={styles.modal} onBlur={props.onBlur}>
+  return <div className={styles.modal} onBlur={props.onBlur}>
     <div className={styles.header}>
       <h2>Cart List</h2>
     </div>
@@ -28,8 +29,8 @@ const ModalOverlay = (props) =>  {
             </div>
             <div className={`col-half ${mealStyle['row-reverse']}`}>
               <div>
-                <button> - </button>
-                <button> + </button>
+                <button onClick={changeAmount(el)} value="-"> - </button>
+                <button onClick={changeAmount(el)} valu="+"> + </button>
               </div>
             </div>
           </div>

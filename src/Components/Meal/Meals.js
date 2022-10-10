@@ -4,6 +4,7 @@ import Cart from '../Cart'
 import mealStyle from '../../styles/meals.module.css'
 import Modal from '../UI/modal'
 import CartContext from '../../Context/CartContext'
+import _ from 'lodash';
 
 const meals = [
   {
@@ -30,7 +31,6 @@ function ReducerCart (oldState,  ACTION) {
   switch (ACTION.type) {
     case 'ADD':{
       const index = oldState.cart.findIndex( el => el.id==ACTION.meal.id);
-      console.log(ACTION)
 
       if(index!=-1) {
         oldState.cart[index].cantidad += ACTION.meal.cantidad
@@ -41,10 +41,9 @@ function ReducerCart (oldState,  ACTION) {
 
       return {...oldState};
     };
-    case 'CHANGE_AMOUNT': {
+    case 'CHANGE': {
       const index = oldState.cart.findIndex( el => el.id==ACTION.meal.id);
-      oldState.cart[index].cantidad += ACTION.add.cantidad;
-
+      oldState.cart[index] = ACTION.meal;
 
       return {...oldState}
     };
@@ -52,7 +51,7 @@ function ReducerCart (oldState,  ACTION) {
       oldState = oldState.cart.filter(el => el.id=ACTION.dropId);
       return {...oldState};
     };
-    default: return oldState;
+    default: return {...oldState};
   }
 }
 
@@ -66,11 +65,10 @@ function Meals () {
   const countProducts = () => cartState.cart.reduce((acc, el) => acc+el.cantidad, 0);
 
   const addNewMeal = (newMeal) => {
-    console.log(newMeal)
     cartDispatcher({type: 'ADD', meal: newMeal})
   }
 
-  return <CartContext.Provider value={{productos: cartState.cart, count: countProducts(), total: totalProducts()}}>
+  return <CartContext.Provider value={{productos: [...cartState.cart], count: countProducts(), total: totalProducts()}}>
     <Cart open={openModal}/>
 
     <div className={`${mealStyle.container}`}>
@@ -87,7 +85,7 @@ function Meals () {
     </div>
     {
       isModalOpen?
-        <Modal onConfirm={openModal} add={()=>{}}/>
+        <Modal onConfirm={openModal} add={cartDispatcher}/>
         : null
     }
   </CartContext.Provider>
